@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Todo App</title>
+
+<link rel="stylesheet" href="style.css">
+
+</head>
+
+<body>
+
+<div class="app">
+
+<header>
+<h1>Today <span id="date"></span></h1>
+</header>
+
+<ul id="taskList"></ul>
+
+<button id="addBtn">+</button>
+
+</div>
+
+
+<!-- Add Task Modal -->
+
+<div class="modal" id="taskModal">
+
+<div class="modal-content">
+
+<h2>Add Task</h2>
+
+<input type="text" id="taskInput" placeholder="Enter task...">
+
+<button id="saveTask">Save</button>
+
+<button id="closeModal">Cancel</button>
+
+</div>
+
+</div>
+
+
+<script src="script.js"></script>
+
+</body>
+</html>

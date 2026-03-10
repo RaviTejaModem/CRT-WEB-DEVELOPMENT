@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Todo App</title>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial;
+}
+
+body{
+background:#f0f0f0;
+display:flex;
+justify-content:center;
+align-items:center;
+height:100vh;
+}
+
+/* APP CONTAINER */
+
+.app{
+width:360px;
+height:650px;
+background:white;
+border-radius:20px;
+box-shadow:0 10px 40px rgba(0,0,0,0.2);
+overflow:hidden;
+position:relative;
+}
+
+/* HEADER */
+
+header{
+background:#222;
+color:white;
+padding:20px;
+}
+
+header h1{
+font-size:22px;
+}
+
+.nav{
+margin-top:10px;
+}
+
+.nav button{
+margin-right:10px;
+padding:6px 10px;
+border:none;
+background:white;
+cursor:pointer;
+border-radius:5px;
+}
+
+/* PAGES */
+
+.page{
+display:none;
+padding:20px;
+height:100%;
+overflow:auto;
+}
+
+.page.active{
+display:block;
+}
+
+/* TASK LIST */
+
+ul{
+list-style:none;
+}
+
+li{
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:10px;
+border-bottom:1px solid #eee;
+}
+
+.completed{
+text-decoration:line-through;
+opacity:0.5;
+}
+
+/* BUTTONS */
+
+.addBtn{
+position:absolute;
+bottom:20px;
+right:20px;
+width:55px;
+height:55px;
+border-radius:50%;
+border:none;
+background:#222;
+color:white;
+font-size:28px;
+cursor:pointer;
+}
+
+/* INPUT */
+
+input{
+width:100%;
+padding:10px;
+margin-bottom:10px;
+}
+
+/* EVENTS */
+
+.event{
+background:#eee;
+padding:10px;
+border-radius:10px;
+margin:10px 0;
+}
+
+button{
+cursor:pointer;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+<header>
+
+<h1>Todo List</h1>
+
+<div class="nav">
+
+<button onclick="showPage('today')">Today</button>
+<button onclick="showPage('calendar')">Calendar</button>
+
+</div>
+
+</header>
+
+<!-- TODAY PAGE -->
+
+<div id="today" class="page active">
+
+<ul id="taskList"></ul>
+
+<button class="addBtn" onclick="showPage('add')">+</button>
+
+</div>
+
+<!-- ADD TASK PAGE -->
+
+<div id="add" class="page">
+
+<h2>Add Task</h2>
+
+<input id="taskInput" placeholder="Enter task name">
+
+<button onclick="addTask()">Save Task</button>
+
+<br><br>
+
+<button onclick="showPage('today')">Back</button>
+
+</div>
+
+<!-- CALENDAR PAGE -->
+
+<div id="calendar" class="page">
+
+<h2>Calendar</h2>
+
+<div class="event">6:00 AM — Drink water</div>
+<div class="event">9:00 AM — Work</div>
+<div class="event">6:00 PM — Exercise</div>
+
+<br>
+
+<button onclick="showPage('today')">Back</button>
+
+</div>
+
+</div>
+
+<script>
+
+/* STORAGE */
+
+let tasks = JSON.parse(localStorage.getItem("tasks")) || []
+
+const taskList = document.getElementById("taskList")
+
+/* PAGE NAVIGATION */
+
+function showPage(page){
+
+document.querySelectorAll(".page").forEach(p=>{
+p.classList.remove("active")
+})
+
+document.getElementById(page).classList.add("active")
+
+}
+
+/* RENDER TASKS */
+
+function renderTasks(){
+
+taskList.innerHTML=""
+
+tasks.forEach((task,index)=>{
+
+const li=document.createElement("li")
+
+li.innerHTML=`
+
+<span class="${task.completed ? 'completed':''}">
+${task.text}
+</span>
+
+<div>
+
+<button onclick="toggleTask(${index})">✔</button>
+<button onclick="deleteTask(${index})">🗑</button>
+
+</div>
+
+`
+
+taskList.appendChild(li)
+
+})
+
+}
+
+/* ADD TASK */
+
+function addTask(){
+
+const input=document.getElementById("taskInput")
+
+if(input.value==="") return
+
+tasks.push({
+text:input.value,
+completed:false
+})
+
+input.value=""
+
+saveTasks()
+
+renderTasks()
+
+showPage("today")
+
+}
+
+/* TOGGLE TASK */
+
+function toggleTask(index){
+
+tasks[index].completed=!tasks[index].completed
+
+saveTasks()
+
+renderTasks()
+
+}
+
+/* DELETE TASK */
+
+function deleteTask(index){
+
+tasks.splice(index,1)
+
+saveTasks()
+
+renderTasks()
+
+}
+
+/* SAVE STORAGE */
+
+function saveTasks(){
+
+localStorage.setItem("tasks",JSON.stringify(tasks))
+
+}
+
+/* INITIAL LOAD */
+
+renderTasks()
+
+</script>
+
+</body>
+</html>
